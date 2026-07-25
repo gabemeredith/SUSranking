@@ -6,16 +6,8 @@ import path from "path";
 config({ path: path.join(process.cwd(), ".env.local") });
 config({ path: path.join(process.cwd(), ".env") });
 
-export interface PersonInput {
-  name: string;
-  school?: string | null;
-  headline?: string | null;
-  photo_url?: string | null;
-  linkedin_url?: string | null;
-  website_url?: string | null;
-  blurb?: string | null;
-  raw_profile?: Record<string, unknown>;
-}
+export type { PersonInput } from "../lib/schemas";
+export { PersonInputSchema } from "../lib/schemas";
 
 /**
  * Admin client using the service-role key — scripts only, never the app.

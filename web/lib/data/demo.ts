@@ -1,12 +1,25 @@
 import { randomUUID } from "crypto";
-import { Person, VoteResult, pairKey } from "../types";
-import { applyVote } from "../elo";
+import {
+  PersonInputSchema,
+  PersonPublic,
+  PersonRow,
+  VoteResult,
+  pairKey,
+  toPublicPerson,
+} from "../schemas";
+import { applyVote, STARTING_ELO } from "../elo";
 import { pickMatchup } from "../matchmaking";
 import seed from "../../data/seed.json";
 
+/**
+ * In-memory backend used when Supabase isn't configured. Single-process,
+ * resets on restart — for local dev/demos only. The production path is
+ * Postgres (see lib/data/index.ts).
+ */
+
 interface DemoStore {
-  people: Map<string, Person>;
-  // voterKey -> set of pair keys already voted
+  people: Map<string, PersonRow>;
+  /** voterKey -> pair keys already voted */
   votedPairs: Map<string, Set<string>>;
 }
 
@@ -15,23 +28,18 @@ const g = globalThis as unknown as { __susDemoStore?: DemoStore };
 
 function getStore(): DemoStore {
   if (!g.__susDemoStore) {
-    const people = new Map<string, Person>();
-    for (const row of seed as Array<Record<string, unknown>>) {
+    const people = new Map<string, PersonRow>();
+    for (const raw of seed as unknown[]) {
+      const input = PersonInputSchema.parse(raw);
       const id = randomUUID();
       people.set(id, {
         id,
-        name: row.name as string,
-        school: (row.school as string) ?? null,
-        headline: (row.headline as string) ?? null,
-        photo_url: (row.photo_url as string) ?? null,
-        linkedin_url: (row.linkedin_url as string) ?? null,
-        website_url: (row.website_url as string) ?? null,
-        blurb: (row.blurb as string) ?? null,
-        raw_profile: (row.raw_profile as Record<string, unknown>) ?? {},
-        elo: 1000,
+        ...input,
+        elo: STARTING_ELO,
         wins: 0,
         losses: 0,
         vote_count: 0,
+        created_at: new Date().toISOString(),
       });
     }
     g.__susDemoStore = { people, votedPairs: new Map() };
@@ -39,16 +47,35 @@ function getStore(): DemoStore {
   return g.__susDemoStore;
 }
 
-export function demoGetLeaderboard(): Person[] {
-  return [...getStore().people.values()].sort((a, b) =>
+/** Same gate as production: only people with a LinkedIn are ranked/served. */
+function eligiblePeople(): PersonRow[] {
+  return [...getStore().people.values()].filter((p) => p.linkedin_url);
+}
+
+function sortedPeople(): PersonRow[] {
+  return eligiblePeople().sort((a, b) =>
     b.elo !== a.elo ? b.elo - a.elo : b.vote_count - a.vote_count
   );
 }
 
-export function demoGetMatchup(voterKey: string): [Person, Person] | null {
+export function demoGetLeaderboardPage(
+  page: number,
+  pageSize: number
+): { entries: PersonPublic[]; total: number } {
+  const all = sortedPeople();
+  return {
+    entries: all.slice(page * pageSize, (page + 1) * pageSize).map(toPublicPerson),
+    total: all.length,
+  };
+}
+
+export function demoGetMatchup(
+  voterKey: string
+): [PersonPublic, PersonPublic] | null {
   const store = getStore();
   const excluded = store.votedPairs.get(voterKey) ?? new Set<string>();
-  return pickMatchup([...store.people.values()], excluded);
+  const pair = pickMatchup(eligiblePeople(), excluded);
+  return pair ? [toPublicPerson(pair[0]), toPublicPerson(pair[1])] : null;
 }
 
 export function demoRecordVote(
@@ -60,7 +87,7 @@ export function demoRecordVote(
   const winner = store.people.get(winnerId);
   const loser = store.people.get(loserId);
   if (!winner || !loser || winnerId === loserId) {
-    throw new Error("invalid matchup");
+    throw new Error("invalid_matchup");
   }
   const key = pairKey(winnerId, loserId);
   let voted = store.votedPairs.get(voterKey);

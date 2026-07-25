@@ -22,7 +22,15 @@ the blurb text.`;
 
 const client = new Anthropic();
 
-async function blurbFor(person: PersonInput): Promise<string | null> {
+/** The subset of a person the blurb is generated from. */
+interface BlurbSource {
+  name: string;
+  school?: string | null;
+  headline?: string | null;
+  raw_profile?: Record<string, unknown>;
+}
+
+async function blurbFor(person: BlurbSource): Promise<string | null> {
   const profile = {
     name: person.name,
     school: person.school,
@@ -87,7 +95,7 @@ async function main() {
   if (error) throw new Error(error.message);
   console.log(`${people.length} people need blurbs`);
   for (const person of people) {
-    const blurb = await blurbFor(person as PersonInput);
+    const blurb = await blurbFor(person as BlurbSource);
     if (!blurb) continue;
     await supabase.from("people").update({ blurb }).eq("id", person.id);
     console.log(`  ✓ ${person.name}: ${blurb}`);

@@ -1,22 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { demoMode, recordVote } from "@/lib/data";
+import { VoteRequestSchema } from "@/lib/schemas";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
 const DEMO_VOTER_COOKIE = "sus_demo_voter";
 
+/** Domain errors (raised in Postgres / demo store) → HTTP status */
+const ERROR_STATUS: Record<string, number> = {
+  already_voted: 409,
+  rate_limited: 429,
+  invalid_matchup: 400,
+  person_not_found: 404,
+  not_authenticated: 401,
+};
+
 export async function POST(request: NextRequest) {
-  let body: { winnerId?: string; loserId?: string };
+  let json: unknown;
   try {
-    body = await request.json();
+    json = await request.json();
   } catch {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
   }
-  const { winnerId, loserId } = body;
-  if (!winnerId || !loserId || winnerId === loserId) {
-    return NextResponse.json({ error: "invalid_matchup" }, { status: 400 });
+  const parsed = VoteRequestSchema.safeParse(json);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "invalid_body", details: parsed.error.flatten() },
+      { status: 400 }
+    );
   }
+  const { winnerId, loserId } = parsed.data;
 
   try {
     if (demoMode()) {
@@ -39,7 +53,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(result);
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown";
-    const status = message.includes("already_voted") ? 409 : 500;
-    return NextResponse.json({ error: message }, { status });
+    const known = Object.keys(ERROR_STATUS).find((k) => message.includes(k));
+    return NextResponse.json(
+      { error: known ?? message },
+      { status: known ? ERROR_STATUS[known] : 500 }
+    );
   }
 }

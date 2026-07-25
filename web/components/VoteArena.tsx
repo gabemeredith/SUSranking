@@ -2,7 +2,12 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Matchup, Person, VoteResult } from "@/lib/types";
+import {
+  Matchup,
+  MatchupResponseSchema,
+  PersonPublic,
+  VoteResultSchema,
+} from "@/lib/schemas";
 import { PersonCard } from "./PersonCard";
 
 type State =
@@ -23,8 +28,9 @@ export function VoteArena() {
         setState({ kind: "login_required" });
         return;
       }
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "failed to load");
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "failed to load");
+      const data = MatchupResponseSchema.parse(json);
       if (!data.matchup) {
         setState({ kind: "exhausted" });
         return;
@@ -42,30 +48,47 @@ export function VoteArena() {
     loadMatchup();
   }, [loadMatchup]);
 
-  async function vote(winner: Person, loser: Person) {
-    if (state.kind !== "matchup" || state.winnerId) return;
-    setState({ ...state, winnerId: winner.id });
-    try {
-      const res = await fetch("/api/vote", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ winnerId: winner.id, loserId: loser.id }),
+  const vote = useCallback(
+    async (winner: PersonPublic, loser: PersonPublic) => {
+      setState((prev) => {
+        if (prev.kind !== "matchup" || prev.winnerId) return prev;
+        return { ...prev, winnerId: winner.id };
       });
-      const data: VoteResult & { error?: string } = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "vote failed");
-      setState((prev) =>
-        prev.kind === "matchup" ? { ...prev, delta: data.delta } : prev
-      );
-      setTimeout(loadMatchup, 900);
-    } catch {
-      // e.g. already voted on this pair in another tab — just move on
-      setTimeout(loadMatchup, 400);
+      try {
+        const res = await fetch("/api/vote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ winnerId: winner.id, loserId: loser.id }),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error ?? "vote failed");
+        const data = VoteResultSchema.parse(json);
+        setState((prev) =>
+          prev.kind === "matchup" ? { ...prev, delta: data.delta } : prev
+        );
+        setTimeout(loadMatchup, 900);
+      } catch {
+        // e.g. already voted on this pair in another tab — just move on
+        setTimeout(loadMatchup, 400);
+      }
+    },
+    [loadMatchup]
+  );
+
+  // Arrow-key voting: ← picks the left card, → the right.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (state.kind !== "matchup" || state.winnerId) return;
+      if (e.key === "ArrowLeft") vote(state.matchup.a, state.matchup.b);
+      if (e.key === "ArrowRight") vote(state.matchup.b, state.matchup.a);
     }
-  }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [state, vote]);
 
   if (state.kind === "loading") {
     return (
-      <div className="py-24 text-center text-sm text-neutral-400">
+      <div className="py-24 text-center font-mono text-xs uppercase tracking-[0.3em] text-neutral-600">
         Finding a matchup…
       </div>
     );
@@ -74,14 +97,14 @@ export function VoteArena() {
   if (state.kind === "login_required") {
     return (
       <div className="py-20 text-center">
-        <p className="text-lg font-semibold">Sign in to vote</p>
+        <p className="text-xl font-black text-white">Sign in to vote</p>
         <p className="mt-2 text-sm text-neutral-500">
           Voting requires an account so the Elo can&apos;t be gamed. The
           leaderboard is public.
         </p>
         <Link
           href="/login"
-          className="mt-6 inline-block rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-orange-500"
+          className="mt-6 inline-block rounded-lg bg-[#ff6d1b] px-6 py-2.5 text-sm font-bold text-black transition hover:bg-[#ff8a47]"
         >
           Sign in
         </Link>
@@ -92,12 +115,14 @@ export function VoteArena() {
   if (state.kind === "exhausted") {
     return (
       <div className="py-20 text-center">
-        <p className="text-lg font-semibold">You&apos;ve voted on every pair 🎉</p>
+        <p className="text-xl font-black text-white">
+          You&apos;ve judged every matchup 🏁
+        </p>
         <Link
           href="/leaderboard"
-          className="mt-6 inline-block rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-orange-500"
+          className="mt-6 inline-block rounded-lg bg-[#ff6d1b] px-6 py-2.5 text-sm font-bold text-black transition hover:bg-[#ff8a47]"
         >
-          See the leaderboard
+          See the damage
         </Link>
       </div>
     );
@@ -106,10 +131,10 @@ export function VoteArena() {
   if (state.kind === "error") {
     return (
       <div className="py-20 text-center">
-        <p className="text-sm text-red-600">Something broke: {state.message}</p>
+        <p className="text-sm text-red-400">Something broke: {state.message}</p>
         <button
           onClick={loadMatchup}
-          className="mt-4 rounded-lg border border-neutral-300 px-4 py-2 text-sm dark:border-neutral-700"
+          className="mt-4 rounded-lg border border-neutral-700 px-4 py-2 text-sm text-neutral-300 hover:border-neutral-500"
         >
           Retry
         </button>
@@ -118,7 +143,7 @@ export function VoteArena() {
   }
 
   const { matchup, winnerId, delta } = state;
-  const resultFor = (p: Person): "winner" | "loser" | null =>
+  const resultFor = (p: PersonPublic): "winner" | "loser" | null =>
     winnerId === null ? null : winnerId === p.id ? "winner" : "loser";
 
   return (
@@ -126,24 +151,32 @@ export function VoteArena() {
       <div className="grid gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-stretch">
         <PersonCard
           person={matchup.a}
+          side="left"
           disabled={winnerId !== null}
           result={resultFor(matchup.a)}
           onVote={() => vote(matchup.a, matchup.b)}
         />
-        <div className="flex items-center justify-center text-sm font-black text-neutral-300 dark:text-neutral-700">
-          VS
+        <div className="flex items-center justify-center">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#ff6d1b] font-mono text-sm font-black text-[#ff6d1b] shadow-[0_0_30px_-8px_rgba(255,109,27,0.7)]">
+            VS
+          </span>
         </div>
         <PersonCard
           person={matchup.b}
+          side="right"
           disabled={winnerId !== null}
           result={resultFor(matchup.b)}
           onVote={() => vote(matchup.b, matchup.a)}
         />
       </div>
-      <p className="mt-6 text-center text-xs text-neutral-400">
-        {winnerId && delta
-          ? `+${delta} / −${delta} Elo — next matchup coming up…`
-          : "Who's accomplished more? Click a card to vote."}
+      <p className="mt-8 text-center font-mono text-[11px] uppercase tracking-[0.25em] text-neutral-600">
+        {winnerId && delta ? (
+          <span className="text-[#ff6d1b]">
+            +{delta} elo — next matchup…
+          </span>
+        ) : (
+          <>click a card — or use ← → keys</>
+        )}
       </p>
     </div>
   );

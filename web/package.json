@@ -6,7 +6,12 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "scrape": "tsx scripts/scrape-uncsus.ts",
+    "import": "tsx scripts/import.ts",
+    "blurbs": "tsx scripts/generate-blurbs.ts",
+    "enrich": "tsx scripts/enrich-linkedin.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
@@ -16,7 +21,8 @@
     "dotenv": "^17.4.2",
     "next": "15.5.21",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
