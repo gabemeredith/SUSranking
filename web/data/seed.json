@@ -1,0 +1,194 @@
+[
+  {
+    "name": "Maya Okafor",
+    "school": "Stanford",
+    "headline": "CS + Math, building AI agents for logistics",
+    "linkedin_url": "https://linkedin.com/in/example-maya",
+    "blurb": "Shipped an AI dispatch tool used by 40 trucking companies while still a sophomore. Prev SWE intern at Stripe; won HackMIT with a warehouse-routing agent.",
+    "raw_profile": { "experience": ["Stripe SWE intern", "Founder, FleetPilot"], "awards": ["HackMIT winner"] }
+  },
+  {
+    "name": "Ethan Zhao",
+    "school": "MIT",
+    "headline": "Dropped out to build dev-tools",
+    "linkedin_url": "https://linkedin.com/in/example-ethan",
+    "blurb": "Built an open-source CI cache with 8k GitHub stars, then left MIT to turn it into a company. $500k pre-seed from angels; 200 paying teams.",
+    "raw_profile": { "experience": ["Founder, CacheFly CI"], "metrics": ["8k stars", "200 paying teams"] }
+  },
+  {
+    "name": "Priya Raman",
+    "school": "Berkeley",
+    "headline": "EECS, ML infra @ scale",
+    "linkedin_url": "https://linkedin.com/in/example-priya",
+    "blurb": "Maintains a popular LoRA fine-tuning library (3k stars). Interned on Meta's PyTorch team; published at NeurIPS as an undergrad.",
+    "raw_profile": { "experience": ["Meta PyTorch intern"], "publications": ["NeurIPS 2025"] }
+  },
+  {
+    "name": "Jake Morrison",
+    "school": "Georgia Tech",
+    "headline": "Hardware founder, ex-SpaceX intern",
+    "linkedin_url": "https://linkedin.com/in/example-jake",
+    "blurb": "Two SpaceX internships on Raptor test stands. Now building low-cost CNC machines for small shops; 30 pre-orders from a demo video.",
+    "raw_profile": { "experience": ["SpaceX intern x2", "Founder, ShopBotics"] }
+  },
+  {
+    "name": "Sofia Hernandez",
+    "school": "Harvard",
+    "headline": "Biotech x software",
+    "linkedin_url": "https://linkedin.com/in/example-sofia",
+    "blurb": "Built lab-automation software used by 12 Harvard/MIT wet labs. Co-authored a Nature Methods paper; Thiel Fellowship finalist.",
+    "raw_profile": { "experience": ["Founder, BenchOS"], "publications": ["Nature Methods"], "awards": ["Thiel finalist"] }
+  },
+  {
+    "name": "Daniel Kim",
+    "school": "Waterloo",
+    "headline": "6 internships, fintech infra",
+    "linkedin_url": "https://linkedin.com/in/example-daniel",
+    "blurb": "Waterloo CS with internships at Jane Street, Citadel, and Ramp. Built a real-time payments reconciliation engine processing $2M/day at Ramp.",
+    "raw_profile": { "experience": ["Jane Street", "Citadel", "Ramp"] }
+  },
+  {
+    "name": "Amara Diallo",
+    "school": "Columbia",
+    "headline": "Consumer social founder",
+    "linkedin_url": "https://linkedin.com/in/example-amara",
+    "blurb": "Grew a campus events app to 25k MAU across 8 universities with zero paid marketing. Raised $300k; featured in TechCrunch.",
+    "raw_profile": { "experience": ["Founder, Lately"], "metrics": ["25k MAU"] }
+  },
+  {
+    "name": "Lucas Meyer",
+    "school": "CMU",
+    "headline": "Robotics, RL for manipulation",
+    "linkedin_url": "https://linkedin.com/in/example-lucas",
+    "blurb": "First-author RSS paper on dexterous manipulation. Built the perception stack for CMU's home-robot team; interned at Boston Dynamics AI Institute.",
+    "raw_profile": { "experience": ["Boston Dynamics AI Institute intern"], "publications": ["RSS 2026"] }
+  },
+  {
+    "name": "Hannah Goldberg",
+    "school": "Penn (M&T)",
+    "headline": "Healthcare ops startup",
+    "linkedin_url": "https://linkedin.com/in/example-hannah",
+    "blurb": "Runs a prior-auth automation startup with 3 clinic customers and $8k MRR. Prev PM intern at Epic; M&T program (Wharton + engineering).",
+    "raw_profile": { "experience": ["Founder, AuthPilot", "Epic PM intern"], "metrics": ["$8k MRR"] }
+  },
+  {
+    "name": "Omar Farouk",
+    "school": "UT Austin",
+    "headline": "Turing Scholar, GPU kernels",
+    "linkedin_url": "https://linkedin.com/in/example-omar",
+    "blurb": "Wrote CUDA kernels that beat cuBLAS on small-batch inference; NVIDIA internship offer after his repo hit 2k stars. TA for the OS course.",
+    "raw_profile": { "experience": ["NVIDIA intern"], "metrics": ["2k stars"] }
+  },
+  {
+    "name": "Grace Liu",
+    "school": "Princeton",
+    "headline": "Quant -> climate founder",
+    "linkedin_url": "https://linkedin.com/in/example-grace",
+    "blurb": "Left a Two Sigma return offer to build carbon-accounting software for mid-size manufacturers. 5 pilot customers; Princeton pitch competition winner.",
+    "raw_profile": { "experience": ["Two Sigma intern", "Founder, Emissary"] }
+  },
+  {
+    "name": "Noah Patel",
+    "school": "UIUC",
+    "headline": "Open-source database internals",
+    "linkedin_url": "https://linkedin.com/in/example-noah",
+    "blurb": "Core contributor to a Rust storage engine; merged 60+ PRs. Interned at Cockroach Labs; wrote a widely-shared blog series on B-tree internals.",
+    "raw_profile": { "experience": ["Cockroach Labs intern"], "metrics": ["60+ PRs merged"] }
+  },
+  {
+    "name": "Isabella Rossi",
+    "school": "NYU Stern",
+    "headline": "Creator-economy tooling",
+    "linkedin_url": "https://linkedin.com/in/example-isabella",
+    "blurb": "Bootstrapped a link-in-bio analytics tool to $4k MRR solo. 120k TikTok followers documenting the build; Stern entrepreneurship award.",
+    "raw_profile": { "experience": ["Founder, BioMetrics"], "metrics": ["$4k MRR", "120k followers"] }
+  },
+  {
+    "name": "Will Thompson",
+    "school": "Michigan",
+    "headline": "Defense-tech, ex-Anduril intern",
+    "linkedin_url": "https://linkedin.com/in/example-will",
+    "blurb": "Two Anduril internships on counter-UAS. Leads Michigan's rocketry avionics team (2nd at Spaceport America); building drone-detection hardware.",
+    "raw_profile": { "experience": ["Anduril intern x2"], "awards": ["Spaceport America 2nd"] }
+  },
+  {
+    "name": "Chloe Nakamura",
+    "school": "UCLA",
+    "headline": "Design engineer, viral consumer apps",
+    "linkedin_url": "https://linkedin.com/in/example-chloe",
+    "blurb": "Solo-built a photo-journal app that hit #12 on the App Store lifestyle chart (300k downloads). Prev design intern at Figma.",
+    "raw_profile": { "experience": ["Figma design intern"], "metrics": ["300k downloads"] }
+  },
+  {
+    "name": "Arjun Mehta",
+    "school": "Cornell",
+    "headline": "LLM eval infrastructure",
+    "linkedin_url": "https://linkedin.com/in/example-arjun",
+    "blurb": "Built an LLM eval harness adopted by 3 YC startups; $12k MRR. Prev research assistant in Cornell NLP lab with an ACL workshop paper.",
+    "raw_profile": { "experience": ["Founder, Evalyard"], "metrics": ["$12k MRR"] }
+  },
+  {
+    "name": "Zoe Anderson",
+    "school": "Duke",
+    "headline": "Sports analytics founder",
+    "linkedin_url": "https://linkedin.com/in/example-zoe",
+    "blurb": "Sells computer-vision scouting reports to 14 D1 basketball programs. Duke innovation grant winner; prev data science intern at the NBA.",
+    "raw_profile": { "experience": ["NBA data science intern", "Founder, CourtVision"] }
+  },
+  {
+    "name": "Ben Cohen",
+    "school": "Brown",
+    "headline": "Crypto infra, MEV research",
+    "linkedin_url": "https://linkedin.com/in/example-ben",
+    "blurb": "Published MEV research cited by Flashbots; ran a validator infra service doing $30k/yr profit from his dorm. Ethereum Foundation grant recipient.",
+    "raw_profile": { "experience": ["Independent researcher"], "awards": ["EF grant"] }
+  },
+  {
+    "name": "Lily Wang",
+    "school": "Caltech",
+    "headline": "Computational bio + ML",
+    "linkedin_url": "https://linkedin.com/in/example-lily",
+    "blurb": "Built protein-structure screening pipelines at a Genentech internship; first-author bioRxiv preprint. Putnam top-200.",
+    "raw_profile": { "experience": ["Genentech intern"], "awards": ["Putnam top 200"] }
+  },
+  {
+    "name": "Marcus Johnson",
+    "school": "Howard",
+    "headline": "Fintech for underbanked communities",
+    "linkedin_url": "https://linkedin.com/in/example-marcus",
+    "blurb": "Founded a credit-building app with 6k users and a bank partnership. Prev Goldman Sachs intern; Howard startup competition winner.",
+    "raw_profile": { "experience": ["Goldman Sachs intern", "Founder, StackUp"], "metrics": ["6k users"] }
+  },
+  {
+    "name": "Emma Novak",
+    "school": "UW Seattle",
+    "headline": "Distributed systems, ex-AWS",
+    "linkedin_url": "https://linkedin.com/in/example-emma",
+    "blurb": "Returned AWS intern on the S3 team; shipped a consistency-checking service now running in production. UW ACM chair.",
+    "raw_profile": { "experience": ["AWS S3 intern x2"] }
+  },
+  {
+    "name": "Ryan O'Brien",
+    "school": "Notre Dame",
+    "headline": "Construction-tech founder",
+    "linkedin_url": "https://linkedin.com/in/example-ryan",
+    "blurb": "Digitized bid management for 9 regional contractors; $6k MRR and growing. Worked summers on job sites before writing a line of code.",
+    "raw_profile": { "experience": ["Founder, BidBoard"], "metrics": ["$6k MRR"] }
+  },
+  {
+    "name": "Aisha Khan",
+    "school": "Rice",
+    "headline": "Energy systems + ML forecasting",
+    "linkedin_url": "https://linkedin.com/in/example-aisha",
+    "blurb": "Built ERCOT price-forecasting models during a Tesla Energy internship; her grid-battery dispatch sim won the Rice datathon.",
+    "raw_profile": { "experience": ["Tesla Energy intern"], "awards": ["Rice datathon winner"] }
+  },
+  {
+    "name": "Tom Eriksson",
+    "school": "UChicago",
+    "headline": "Math, trading systems, angel-backed",
+    "linkedin_url": "https://linkedin.com/in/example-tom",
+    "blurb": "Built a paper-trading platform used by 15 university finance clubs. IMO honorable mention; incoming Jane Street intern.",
+    "raw_profile": { "experience": ["Founder, PitSim", "Jane Street incoming"], "awards": ["IMO HM"] }
+  }
+]
