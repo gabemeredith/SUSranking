@@ -104,15 +104,21 @@ history into `raw_profile.experience`, and fills in empty
 Different provider? Add a function to `scripts/enrich-linkedin.ts` — the
 `Provider` interface is one function: LinkedIn URL in, profile out.
 
-## 5. Generate the vote-card blurbs
+## 5. Generate the card copy (blurb + one-liner)
 
 ```bash
 npm run blurbs
 ```
 
-Claude (`claude-opus-5`) compiles each person's enriched `raw_profile` into
-the 1–2 sentence accomplishments blurb shown on cards. Only fills missing
-blurbs, so re-running after new imports is cheap.
+One Claude call per person (`claude-opus-5`, structured output) produces both:
+
+- the 1–2 sentence accomplishments **blurb**, and
+- the short **one-liner** under their name (e.g. "Sports analytics founder").
+
+The one-liner fills `headline` when it's missing or looks like a raw LinkedIn
+headline ("Building X | prev @ Y"). Existing clean headlines are kept; run
+`npm run blurbs -- --rewrite-headlines` to regenerate all of them. Only people
+missing a blurb are processed, so re-running after new imports is cheap.
 
 ## 6. Run / deploy
 
