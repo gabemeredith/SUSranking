@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ButtonLink } from "@/components/ui/Button";
 import { createSupabaseServerClient, isSupabaseConfigured } from "@/lib/supabase/server";
 
 export async function Header() {
@@ -13,46 +14,50 @@ export async function Header() {
   }
 
   return (
-    <header className="border-b border-neutral-800/80 bg-black/40 backdrop-blur">
+    <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/85 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <Link href="/" className="group flex items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center rounded bg-[#ff6d1b] font-black text-white">
-            S
-          </span>
-          <span className="text-lg font-black tracking-tight text-white">
-            SUS&nbsp;RANKING
-          </span>
-          <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500 sm:inline">
-            Startup School &rsquo;26
-          </span>
-        </Link>
-        <nav className="flex items-center gap-4 text-sm text-neutral-300">
-          <Link href="/" className="transition hover:text-[#ff6d1b]">
-            Vote
+        <div className="flex items-center gap-6">
+          <Link href="/" className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded bg-accent text-sm font-black text-white">
+              S
+            </span>
+            <span className="text-lg font-black tracking-tight">
+              SUS RANKING
+            </span>
           </Link>
-          <Link href="/leaderboard" className="transition hover:text-[#ff6d1b]">
-            Leaderboard
-          </Link>
+          <nav className="flex items-center gap-1 text-sm font-medium text-neutral-500">
+            <Link
+              href="/"
+              className="rounded-full px-3 py-1.5 transition hover:bg-neutral-100 hover:text-neutral-900"
+            >
+              Vote
+            </Link>
+            <Link
+              href="/leaderboard"
+              className="rounded-full px-3 py-1.5 transition hover:bg-neutral-100 hover:text-neutral-900"
+            >
+              Leaderboard
+            </Link>
+          </nav>
+        </div>
+        <div className="flex items-center gap-3">
           {!supabaseConfigured ? (
-            <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-amber-400">
+            <span className="rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-amber-700">
               demo
             </span>
           ) : email ? (
             <form action="/auth/signout" method="post" className="flex items-center gap-2">
-              <span className="hidden text-xs text-neutral-500 sm:inline">{email}</span>
-              <button className="rounded-lg border border-neutral-700 px-3 py-1.5 text-xs text-neutral-300 transition hover:border-neutral-500 hover:text-white">
+              <span className="hidden text-xs text-neutral-400 sm:inline">{email}</span>
+              <button className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-600 transition hover:border-neutral-400">
                 Sign out
               </button>
             </form>
           ) : (
-            <Link
-              href="/login"
-              className="rounded-lg bg-[#ff6d1b] px-3.5 py-1.5 text-xs font-bold text-black transition hover:bg-[#ff8a47]"
-            >
-              Sign in
-            </Link>
+            <ButtonLink href="/login" size="sm">
+              Sign in →
+            </ButtonLink>
           )}
-        </nav>
+        </div>
       </div>
     </header>
   );

@@ -44,16 +44,26 @@ export const PersonRowSchema = z.object({
 });
 export type PersonRow = z.infer<typeof PersonRowSchema>;
 
-// What the client ever sees: no raw_profile, no timestamps.
+// What the client ever sees: no raw_profile, no timestamps. `experience` is
+// the only field derived from raw_profile (top lines for the vote card).
 export const PersonPublicSchema = PersonRowSchema.omit({
   raw_profile: true,
   created_at: true,
+}).extend({
+  experience: z.array(z.string()).default([]),
 });
 export type PersonPublic = z.infer<typeof PersonPublicSchema>;
 
+const MAX_CARD_EXPERIENCE = 4;
+
 export function toPublicPerson(row: PersonRow): PersonPublic {
+  const experience = Array.isArray(row.raw_profile.experience)
+    ? row.raw_profile.experience
+        .filter((line): line is string => typeof line === "string")
+        .slice(0, MAX_CARD_EXPERIENCE)
+    : [];
   // .parse strips the private fields
-  return PersonPublicSchema.parse(row);
+  return PersonPublicSchema.parse({ ...row, experience });
 }
 
 // ---------------------------------------------------------------------------
